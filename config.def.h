@@ -37,6 +37,9 @@ static const unsigned int alphas[][3]      = {
 static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
 static const char *defaulttagapps[] = { "LibreWolf", "Pcmanfm", NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
+/* Lockfile */
+static char lockfile[] = "/tmp/dwm.lock";
+
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
