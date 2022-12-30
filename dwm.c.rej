@@ -1,0 +1,10 @@
+--- dwm.c
++++ dwm.c
+@@ -1251,6 +1254,7 @@ propertynotify(XEvent *e)
+ void
+ quit(const Arg *arg)
+ {
++	if(arg->i) restart = 1;
+ 	running = 0;
+ }
+ 
