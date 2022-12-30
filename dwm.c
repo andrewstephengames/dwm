@@ -274,6 +274,7 @@ static void swalunreg(Client *c);
 static void swalstop(Client *c, Client *root);
 static void swalstopsel(const Arg *unused);
 static void tag(const Arg *arg);
+static void spawntag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void tile(Monitor *m);
 static void togglebar(const Arg *arg);
@@ -2808,6 +2809,19 @@ tag(const Arg *arg)
 		setclienttagprop(c);
 		focus(NULL);
 		arrange(selmon);
+	}
+}
+
+void
+spawntag(const Arg *arg)
+{
+	if (arg->ui & TAGMASK) {
+		for (int i = LENGTH(tags); i >= 0; i--) {
+			if (arg->ui & 1<<i) {
+				spawn(&tagexec[i]);
+				return;
+			}
+		}
 	}
 }
 
