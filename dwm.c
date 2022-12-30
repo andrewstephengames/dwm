@@ -1624,14 +1624,9 @@ void
 resizemouse(const Arg *arg)
 {
 	int ocx, ocy, nw, nh;
-	int ocx2, ocy2, nx, ny;
 	Client *c;
 	Monitor *m;
 	XEvent ev;
-	int horizcorner, vertcorner;
-	int di;
-	unsigned int dui;
-	Window dummy;
 	Time lasttime = 0;
 
 	if (!(c = selmon->sel))
