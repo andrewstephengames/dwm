@@ -111,14 +111,9 @@ struct Client {
 typedef struct {
 	unsigned int mod;
 	KeySym keysym;
-} Key;
-
-typedef struct {
-	unsigned int n;
-	const Key keys[5];
 	void (*func)(const Arg *);
 	const Arg arg;
-} Keychord;
+} Key;
 
 typedef struct {
 	const char *symbol;
@@ -355,7 +350,6 @@ static Drw *drw;
 static Monitor *mons, *selmon;
 static Swallow *swallows;
 static Window root, wmcheckwin;
-unsigned int currentkey = 0;
 
 static int useargb = 0;
 static Visual *visual;
@@ -1261,48 +1255,17 @@ isuniquegeom(XineramaScreenInfo *unique, size_t n, XineramaScreenInfo *info)
 void
 keypress(XEvent *e)
 {
-	XEvent event = *e;
-	Keychord *keychord;
-	unsigned int ran = 0;
+	unsigned int i;
 	KeySym keysym;
 	XKeyEvent *ev;
-	Keychord *newoptions;
-	Keychord *oldoptions = (Keychord *)malloc(sizeof(keychords));
 
-	memcpy(oldoptions, keychords, sizeof(keychords));
-	size_t numoption = 0;
-	while(!ran){
-		ev = &event.xkey;
-		keysym = XKeycodeToKeysym(dpy, (KeyCode)ev->keycode, 0);
-		newoptions = (Keychord *)malloc(0);
-		numoption = 0;
-		for (keychord = oldoptions; keychord->n != 0 && currentkey < 5; keychord = (Keychord *)((char *)keychord + sizeof(Keychord))){
-			if(keysym == keychord->keys[currentkey].keysym
-			   && CLEANMASK(keychord->keys[currentkey].mod) == CLEANMASK(ev->state)
-			   && keychord->func){
-				if(keychord->n == currentkey +1){
-					keychord->func(&(keychord->arg));
-					ran = 1;
-				}else{
-					numoption++;
-					newoptions = (Keychord *)realloc(newoptions, numoption * sizeof(Keychord));
-					memcpy((char *)newoptions + (numoption -1) * sizeof(Keychord),keychord, sizeof(Keychord));
-				}
-			}
-		}
-		currentkey++;
-		if(numoption == 0)
-			break;
-		grabkeys();
-		while (running && !XNextEvent(dpy, &event) && !ran)
-			if(event.type == KeyPress)
-				break;
-		free(oldoptions);
-		oldoptions = newoptions;
-	}
-	free(newoptions);
-	currentkey = 0;
-	grabkeys();
+	ev = &e->xkey;
+	keysym = XKeycodeToKeysym(dpy, (KeyCode)ev->keycode, 0);
+	for (i = 0; i < LENGTH(keys); i++)
+		if (keysym == keys[i].keysym
+		&& CLEANMASK(keys[i].mod) == CLEANMASK(ev->state)
+		&& keys[i].func)
+			keys[i].func(&(keys[i].arg));
 }
 
 void
