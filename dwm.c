@@ -1598,6 +1598,14 @@ resizeclient(Client *c, int x, int y, int w, int h)
 	c->oldw = c->w; c->w = wc.width = w;
 	c->oldh = c->h; c->h = wc.height = h;
 	wc.border_width = c->bw;
+        if (((nexttiled(c->mon->clients) == c && !nexttiled(c->next))
+            || &monocle == c->mon->lt[c->mon->sellt]->arrange)
+            && !c->isfullscreen && !c->isfloating
+            && NULL != c->mon->lt[c->mon->sellt]->arrange) {
+                c->w = wc.width += c->bw * 2;
+                c->h = wc.height += c->bw * 2;
+                wc.border_width = 0;
+        }
 	if (!selmon->drawwithgaps && /* this is the noborderfloatingfix patch, slightly modified so that it will work if, and only if, gaps are disabled. */
 	    (((nexttiled(c->mon->clients) == c && !nexttiled(c->next)) /* these two first lines are the only ones changed. if you are manually patching and have noborder installed already, just change these lines; or conversely, just remove this section if the noborder patch is not desired ;) */
 	    || &monocle == c->mon->lt[c->mon->sellt]->arrange))
