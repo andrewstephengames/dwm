@@ -61,9 +61,6 @@
 
 #define OPAQUE                  0xffU
 
-#define GAP_TOGGLE 100
-#define GAP_RESET  0
-
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurSwal, CurLast }; /* cursor */
 enum { SchemeNorm, SchemeSel }; /* color schemes */
@@ -120,12 +117,6 @@ typedef struct {
 	const char *symbol;
 	void (*arrange)(Monitor *);
 } Layout;
-
-typedef struct {
-	int isgap;
-	int realgap;
-	int gappx;
-} Gap;
 
 struct Monitor {
 	char ltsymbol[16];
@@ -216,7 +207,6 @@ static void focus(Client *c);
 static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
-static void gap_copy(Gap *to, const Gap *from);
 static Atom getatomprop(Client *c, Atom prop);
 static int getrootptr(int *x, int *y);
 static long getstate(Window w);
@@ -787,8 +777,6 @@ createmon(void)
 	m->nmaster = nmaster;
 	m->showbar = showbar;
 	m->topbar = topbar;
-	m->gap = malloc(sizeof(Gap));
-	gap_copy(m->gap, &default_gap);
 	m->lt[0] = &layouts[0];
 	m->lt[1] = &layouts[1 % LENGTH(layouts)];
 	m->nTabs = 0;
@@ -2002,35 +1990,6 @@ setlasttag(int tagbit) {
 		lastchosentag[mon] = previouschosentag[mon];
 		previouschosentag[mon] = tempTag;
 	}
-}
-
-void
-gap_copy(Gap *to, const Gap *from)
-{
-	to->isgap   = from->isgap;
-	to->realgap = from->realgap;
-	to->gappx   = from->gappx;
-}
-
-void
-setgaps(const Arg *arg)
-{
-	Gap *p = selmon->gap;
-	switch(arg->i)
-	{
-		case GAP_TOGGLE:
-			p->isgap = 1 - p->isgap;
-			break;
-		case GAP_RESET:
-			gap_copy(p, &default_gap);
-			break;
-		default:
-			p->realgap += arg->i;
-			p->isgap = 1;
-	}
-	p->realgap = MAX(p->realgap, 0);
-	p->gappx = p->realgap * p->isgap;
-	arrange(selmon);
 }
 
 void
