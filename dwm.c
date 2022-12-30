@@ -1048,8 +1048,6 @@ focus(Client *c)
 			selmon = c->mon;
 		if (c->isurgent)
 			seturgent(c, 0);
-		detachstack(c);
-		attachstack(c);
 		grabbuttons(c, 1);
 		XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
                 if (!selmon->drawwithgaps && !c->isfloating) {
@@ -1064,6 +1062,8 @@ focus(Client *c)
 		XDeleteProperty(dpy, root, netatom[NetActiveWindow]);
 	}
 	selmon->sel = c;
+	if(c && selmon->lt[selmon->sellt]->arrange == monocle)
+		XRaiseWindow(dpy, c->win);
 	drawbars();
 }
 
@@ -1112,8 +1112,8 @@ focusstack(const Arg *arg)
 					c = i;
 	}
 	if (c) {
-		focus(c);
 		restack(selmon);
+		focus(c);
 	}
 }
 
@@ -1689,6 +1689,9 @@ restack(Monitor *m)
 	Client *c;
 	XEvent ev;
 	XWindowChanges wc;
+	int fullscreen = (selmon->sel == c && selmon->sel->isfullscreen)?1:0;
+	Client *nc;
+	for (nc = c->next; nc && !ISVISIBLE(nc); nc = nc->next);
 
 	drawbar(m);
 	if (!m->sel)
@@ -2968,7 +2971,9 @@ unmanage(Client *c, int destroyed)
 	if (scratchpad_last_showed == c)
 		scratchpad_last_showed = NULL;
 	free(c);
-	focus(NULL);
+	focus(nc);
+	if(fullscreen)
+		togglefullscreen();
 	updateclientlist();
 	arrange(m);
 }
