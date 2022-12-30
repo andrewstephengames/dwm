@@ -223,12 +223,7 @@ static void monocle(Monitor *m);
 static void motionnotify(XEvent *e);
 static void movemouse(const Arg *arg);
 static Client *nexttiled(Client *c);
-<<<<<<<
 static void pop(Client *c);
-=======
-static void opacity(Client *c, double opacity);
-static void pop(Client *);
->>>>>>>
 static void propertynotify(XEvent *e);
 static void quit(const Arg *arg);
 static Monitor *recttomon(int x, int y, int w, int h);
@@ -275,11 +270,7 @@ static void tagmon(const Arg *arg);
 static void tile(Monitor *m);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
-<<<<<<<
 static void togglefullscr(const Arg *arg);
-=======
-static void toggleopacity(const Arg *arg);
->>>>>>>
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
 static void unfocus(Client *c, int setfocus);
@@ -1494,18 +1485,6 @@ opacity(Client *c, double opacity)
 }
 
 void
-opacity(Client *c, double opacity)
-{
-	if(bUseOpacity && opacity > 0 && opacity < 1) {
-		unsigned long real_opacity[] = { opacity * 0xffffffff };
-		XChangeProperty(dpy, c->win, netatom[NetWMWindowsOpacity], XA_CARDINAL,
-				32, PropModeReplace, (unsigned char *)real_opacity,
-				1);
-	} else
-		XDeleteProperty(dpy, c->win, netatom[NetWMWindowsOpacity]);
-}
-
-void
 pop(Client *c)
 {
 	detach(c);
@@ -2113,7 +2092,6 @@ setup(void)
 	/* init cursors */
 	cursor[CurNormal] = drw_cur_create(drw, XC_left_ptr);
 	cursor[CurResize] = drw_cur_create(drw, XC_sizing);
-<<<<<<<
 	cursor[CurMove] = drw_cur_create(drw, XC_fleur);
 	cursor[CurSwal] = drw_cur_create(drw, XC_bottom_side);
 	/* init appearance */
@@ -2122,22 +2100,6 @@ setup(void)
 		scheme[i] = drw_scm_create(drw, colors[i], alphas[i], 3);
 	/* init bars */
 	updatebars();
-=======
-	arrange(selmon);
-}
-
-void
-toggleopacity(const Arg *arg) {
-	bUseOpacity = !bUseOpacity;
-	for (Monitor* m = mons; m; m = m->next)
-		for (Client* c = m->clients; c; c = c->next)
-			opacity(c, (bUseOpacity && c != selmon->sel) ? inactiveopacity : activeopacity);
-}
-
-void
-toggletag(const Arg *arg)
-{
->>>>>>>
 	updatestatus();
 	/* supporting window for NetWMCheck */
 	wmcheckwin = XCreateSimpleWindow(dpy, root, 0, 0, 1, 1, 0, 0, 0);
