@@ -1,5 +1,6 @@
 #include "fibonacci.c"
 #include "movestack.c"
+#include "selfrestart.c"
 /* See LICENSE file for copyright and license details. */
 
 /* alt-tab configuration */
@@ -114,8 +115,8 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_l,      setcfact,       {.f = -0.25} },
 	{ MODKEY|ShiftMask,             XK_o,      setcfact,       {.f =  0.00} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
-	{ MODKEY,                       XK_q,	   view,           {0} },
-	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
+	/*{ MODKEY,                       XK_q,	   view,           {0} },*/
+	{ MODKEY,                       XK_q,      killclient,     {0} },
         //{ MODKEY,                       XK_s,      spawndefault,   {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
@@ -126,13 +127,14 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
+	{ MODKEY|ShiftMask,             XK_r,      self_restart,   {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-	{ Mod1Mask,             		XK_Tab,    altTabStart,	   {0} },
+	{ Mod1Mask,             	XK_Tab,    altTabStart,	   {0} },
 	{ MODKEY,                       XK_u,      swalstopsel,    {0} },
 	{ Mod1Mask,                       XK_minus,  setgaps,        {.i = -5 } },
 	{ Mod1Mask,                       XK_equal,  setgaps,        {.i = +5 } },
@@ -147,6 +149,7 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
+    { MODKEY|ShiftMask,             XK_r,      self_restart,   {0} },
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 	{ MODKEY,                       XK_minus, scratchpad_show, {0} },
 	{ MODKEY|ShiftMask,             XK_minus, scratchpad_hide, {0} },
@@ -170,4 +173,3 @@ static const Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
-
