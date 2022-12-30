@@ -1,4 +1,5 @@
 #include "fibonacci.c"
+#include "movestack.c"
 /* See LICENSE file for copyright and license details. */
 
 /* alt-tab configuration */
@@ -97,8 +98,12 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+          /*
 	{ MODKEY|ShiftMask,             XK_j,      inplacerotate,  {.i = +1} },
 	{ MODKEY|ShiftMask,             XK_k,      inplacerotate,  {.i = -1} },
+          */
+	{ MODKEY|ShiftMask,             XK_j,      movestack,      {.i = +1} },
+	{ MODKEY|ShiftMask,             XK_k,      movestack,      {.i = -1} },
 	{ MODKEY|ShiftMask,             XK_h,      inplacerotate,  {.i = +2} },
 	{ MODKEY|ShiftMask,             XK_l,      inplacerotate,  {.i = -2} },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
